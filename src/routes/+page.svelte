@@ -1,6 +1,12 @@
 <script lang="ts">
 	import { displayStore } from '$lib/stores/display-store';
+	import CreateDisplayModal from '$lib/ui/modals/CreateDisplayModal.svelte';
 	import Icon from '@iconify/svelte';
+	import { openModal } from 'svelte-modals';
+
+	function createDisplay() {
+		openModal(CreateDisplayModal);
+	}
 </script>
 
 <h1>Darstellungen</h1>
@@ -12,7 +18,7 @@
 		</a>
 	{/each}
 
-	<button class="card add-card" on:click={() => displayStore.addDisplay('Test')}>
+	<button class="card add-card" on:click={createDisplay}>
 		<Icon icon="material-symbols:add" height="46" />
 	</button>
 </div>
