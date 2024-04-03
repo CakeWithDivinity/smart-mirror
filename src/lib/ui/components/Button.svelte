@@ -9,17 +9,23 @@
 	button {
 		padding-block: 0.5rem;
 		padding-inline: 1rem;
+		border-radius: 0.5rem;
+		box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.05);
 
 		&.primary {
 			background-color: var(--primary);
 			color: var(--black);
-			border-radius: 0.5rem;
 			font-weight: bold;
-			box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.05);
 		}
 
 		&.secondary {
 			background-color: transparent;
+		}
+
+		&.destructive {
+			background-color: var(--red);
+			color: var(--white);
+			font-weight: bold;
 		}
 
 		&:disabled {
