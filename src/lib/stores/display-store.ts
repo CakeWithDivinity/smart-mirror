@@ -43,11 +43,26 @@ export const displayStore = (() => {
 		});
 	}
 
+	function deleteWidget(displayUuid: string, position: number) {
+		store.update((displays) => {
+			const display = displays.find((display) => display.uuid === displayUuid);
+
+			if (!display) {
+				throw new Error(`Couldn't find display to update with uuid ${displayUuid}`);
+			}
+
+			display.widgets[position] = undefined;
+
+			return displays;
+		});
+	}
+
 	return {
 		subscribe: store.subscribe,
 		addDisplay,
 		deleteDisplay,
 		getByUuid,
 		placeWidget,
+		deleteWidget,
 	};
 })();

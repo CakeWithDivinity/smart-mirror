@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { WIDGET_ATTRIBUTES, type WidgetType } from '$lib/data/widgets';
 	import { displayStore } from '$lib/stores/display-store';
+	import DeleteWidget from '$lib/ui/modals/DeleteWidget.svelte';
 	import Icon from '@iconify/svelte';
+	import { openModal } from 'svelte-modals';
 	export let data;
 	const display = data.display;
 
@@ -13,6 +15,14 @@
 		} else {
 			selectedWidget = key as WidgetType;
 		}
+	}
+
+	function deleteWidget(position: number, widgetType: WidgetType | undefined) {
+		if (!widgetType) {
+			throw new Error('cannot delete widget without widgetType');
+		}
+
+		openModal(DeleteWidget, { widgetType, displayUuid: $display.uuid, widgetPosition: position });
 	}
 </script>
 
@@ -39,7 +49,7 @@
 		{#each $display.widgets as widget, index}
 			{#if widget}
 				<div class="widget-spot">
-					<button class="delete-widget">
+					<button class="delete-widget" on:click={() => deleteWidget(index, widget?.type)}>
 						<Icon height="20" icon="material-symbols:delete-outline" />
 					</button>
 					<Icon height="48" icon={WIDGET_ATTRIBUTES[widget.type].icon} />
@@ -63,6 +73,8 @@
 				></button>
 			{/if}
 		{/each}
+
+		<a class="mirror-view" href={`/mirror-view/${$display.uuid}`}>Zur Spiegelansicht</a>
 	</div>
 </div>
 
@@ -71,6 +83,7 @@
 		display: grid;
 		grid-template-columns: 20% 80%;
 		min-height: 100vh;
+		position: relative;
 	}
 
 	.sidebar {
@@ -163,5 +176,16 @@
 				background-color: transparent;
 			}
 		}
+	}
+
+	.mirror-view {
+		position: absolute;
+		bottom: 2rem;
+		right: 2rem;
+		background-color: var(--primary);
+		padding: 0.5rem;
+		border-radius: 0.5rem;
+		font-weight: bold;
+		box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.05);
 	}
 </style>
