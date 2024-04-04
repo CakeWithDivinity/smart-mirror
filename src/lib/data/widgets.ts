@@ -4,26 +4,26 @@ export type WidgetType = (typeof WIDGET_TYPES)[number];
 
 export const WIDGET_ATTRIBUTES = {
 	calendar: {
-		type: 'calendar',
 		icon: 'mdi:calendar-outline',
 		name: 'Kalender',
 	},
 	news: {
-		type: 'news',
 		icon: 'mdi:bell',
 		name: 'Nachrichten',
 	},
 	weather: {
-		type: 'weather',
 		icon: 'fluent:weather-haze-20-filled',
 		name: 'Wetter',
 	},
-} as const satisfies Record<WidgetType, BaseWidget>;
+} as const satisfies Record<WidgetType, WidgetData>;
+
+export interface WidgetData {
+	icon: string;
+	name: string;
+}
 
 export interface BaseWidget {
 	type: WidgetType;
-	icon: string;
-	name: string;
 }
 
 export interface CalendarWidget extends BaseWidget {
@@ -31,11 +31,24 @@ export interface CalendarWidget extends BaseWidget {
 }
 
 export interface NewsWidget extends BaseWidget {
-	type: 'calendar';
+	type: 'news';
 }
 
 export interface WeatherWidget extends BaseWidget {
-	type: 'calendar';
+	type: 'weather';
 }
 
 export type Widget = CalendarWidget | NewsWidget | WeatherWidget;
+
+export function createWidget<T extends WidgetType>(widgetType: T): Widget {
+	switch (widgetType) {
+		case 'calendar':
+			return { type: 'calendar' };
+		case 'news':
+			return { type: 'news' };
+		case 'weather':
+			return { type: 'weather' };
+	}
+
+	throw new Error(`Unhandled widgetType ${widgetType}`);
+}

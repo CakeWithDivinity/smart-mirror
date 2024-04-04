@@ -1,4 +1,4 @@
-import type { Widget } from '$lib/data/widgets';
+import { createWidget, type Widget, type WidgetType } from '$lib/data/widgets';
 import type { Display } from '$lib/types/display';
 import { generateUUID } from '$lib/utils/generate-uuid';
 import { persisted } from 'svelte-persisted-store';
@@ -29,10 +29,25 @@ export const displayStore = (() => {
 		return derived(store, (displays) => displays.find((display) => display.uuid === uuid));
 	}
 
+	function placeWidget(displayUuid: string, position: number, widgetType: WidgetType) {
+		store.update((displays) => {
+			const display = displays.find((display) => display.uuid === displayUuid);
+
+			if (!display) {
+				throw new Error(`Couldn't find display to update with uuid ${displayUuid}`);
+			}
+
+			display.widgets[position] = createWidget(widgetType);
+
+			return displays;
+		});
+	}
+
 	return {
 		subscribe: store.subscribe,
 		addDisplay,
 		deleteDisplay,
 		getByUuid,
+		placeWidget,
 	};
 })();

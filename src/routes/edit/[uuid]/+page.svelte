@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { WIDGET_ATTRIBUTES, type WidgetType } from '$lib/data/widgets';
+	import { displayStore } from '$lib/stores/display-store';
 	import Icon from '@iconify/svelte';
 	export let data;
 	const display = data.display;
@@ -35,15 +36,31 @@
 		</div>
 	</div>
 	<div class="preview">
-		{#each $display.widgets as widget}
+		{#each $display.widgets as widget, index}
 			{#if widget}
 				<div class="widget-spot">
-					<Icon height="48" icon={widget.icon} />
-					<div>{widget.name}<button><Icon icon="material-symbols:settings" /></button></div>
-					<button><Icon icon="material-symbols:delete-outline" /></button>
+					<button class="delete-widget">
+						<Icon height="20" icon="material-symbols:delete-outline" />
+					</button>
+					<Icon height="48" icon={WIDGET_ATTRIBUTES[widget.type].icon} />
+					<div class="widget-info">
+						<p>{WIDGET_ATTRIBUTES[widget.type].name}</p>
+						<button>
+							<Icon height="20" icon="material-symbols:settings" />
+						</button>
+					</div>
 				</div>
 			{:else}
-				<div class="empty-widget-spot"></div>
+				<button
+					class="empty-widget-spot"
+					on:click={() => {
+						if (!selectedWidget) {
+							return;
+						}
+
+						displayStore.placeWidget($display.uuid, index, selectedWidget);
+					}}
+				></button>
 			{/if}
 		{/each}
 	</div>
@@ -118,5 +135,33 @@
 
 	.empty-widget-spot {
 		background-color: var(--gray);
+	}
+
+	.widget-spot {
+		background-color: var(--primary);
+		border-radius: 0.5rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0.5rem;
+
+		.delete-widget {
+			align-self: end;
+			background-color: transparent;
+			color: var(--red);
+		}
+
+		.widget-info {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+			font-weight: bold;
+
+			button {
+				background-color: transparent;
+			}
+		}
 	}
 </style>
