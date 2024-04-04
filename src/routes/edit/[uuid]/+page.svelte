@@ -55,7 +55,21 @@
 					<Icon height="48" icon={WIDGET_ATTRIBUTES[widget.type].icon} />
 					<div class="widget-info">
 						<p>{WIDGET_ATTRIBUTES[widget.type].name}</p>
-						<button>
+						<button
+							on:click={() => {
+								if (!widget) {
+									return;
+								}
+
+								// @ts-expect-error types are breaking here, because the props
+								// for `configureModal` can't be inferred correctly
+								openModal(WIDGET_ATTRIBUTES[widget.type].configureModal, {
+									displayUuid: $display.uuid,
+									position: index,
+									widget,
+								});
+							}}
+						>
 							<Icon height="20" icon="material-symbols:settings" />
 						</button>
 					</div>
