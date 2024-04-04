@@ -14,27 +14,33 @@
 	}
 </script>
 
-<h1>Darstellungen</h1>
-<div class="display-list">
-	{#each $displayStore as display}
-		<a href="/edit/{display.uuid}" class="card display-card">
-			<div class="preview"></div>
-			<p>{display.name}</p>
-			<button
-				class="delete"
-				on:click|stopPropagation|preventDefault={() => deleteDisplay(display.uuid)}
-			>
-				<Icon height="26" icon="material-symbols:delete-outline" />
-			</button>
-		</a>
-	{/each}
+<div class="wrapper">
+	<h1>Darstellungen</h1>
+	<div class="display-list">
+		{#each $displayStore as display}
+			<a href="/edit/{display.uuid}" class="card display-card">
+				<div class="preview"></div>
+				<p>{display.name}</p>
+				<button
+					class="delete"
+					on:click|stopPropagation|preventDefault={() => deleteDisplay(display.uuid)}
+				>
+					<Icon height="26" icon="material-symbols:delete-outline" />
+				</button>
+			</a>
+		{/each}
 
-	<button class="card add-card" on:click={createDisplay}>
-		<Icon icon="material-symbols:add" height="46" />
-	</button>
+		<button class="card add-card" on:click={createDisplay}>
+			<Icon icon="material-symbols:add" height="46" />
+		</button>
+	</div>
 </div>
 
 <style lang="scss">
+	.wrapper {
+		padding: 1.5rem;
+	}
+
 	h1 {
 		margin-bottom: 2rem;
 	}
