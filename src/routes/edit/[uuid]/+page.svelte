@@ -139,6 +139,10 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
+
+		> p {
+			width: 100%;
+		}
 	}
 
 	.icon-wrapper {
@@ -149,6 +153,7 @@
 		align-items: center;
 		border-radius: 0.5rem;
 		box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.05);
+		width: 100%;
 	}
 
 	.preview {
