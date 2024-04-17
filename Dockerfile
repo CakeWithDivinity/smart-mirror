@@ -1,10 +1,11 @@
-FROM node:latest AS builder
+FROM node:lts AS builder
 
 WORKDIR /app
 
 COPY . .
 
-RUN npm install -g pnpm
+RUN npm install -g pnpm@^8.0.0
+
 RUN pnpm install
 
 RUN pnpm build
