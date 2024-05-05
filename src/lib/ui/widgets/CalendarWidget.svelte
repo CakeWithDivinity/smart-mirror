@@ -9,7 +9,6 @@
 	var currentdate =
 		newDate.getDate() + '.' + (newDate.getMonth() + 1) + '.' + newDate.getFullYear();
 	var currenttime = newDate.getHours() + ':' + newDate.getMinutes() + ' Uhr';
-	var day = newDate.getDate();
 
 	// Function to display the current date and time
 	function displayDateTime() {
@@ -25,7 +24,7 @@
 
 	// call the api with the year and loacation
 	const year = newDate.getFullYear();
-	const nextYear = newDate.getFullYear() + 1;
+	//const nextYear = newDate.getFullYear() + 1;
 
 	const getHolidays = async () => {
 		const response = await fetch('https://date.nager.at/api/v3/publicholidays/' + year + '/DE');
