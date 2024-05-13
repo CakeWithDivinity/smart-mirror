@@ -70,8 +70,6 @@
 	}
 </script>
 
-{widget.type}
-
 {#if response}
 	{#await response}
 		<p>Loading...</p>
@@ -82,23 +80,76 @@
 					maybe add later on, problem: text is english
 					<p>{weatherData.current.condition.text}</p>
 				-->
-			<img src={weatherData.current.condition.icon} alt="Weather Icon" />
+		{:else}
+			<p>Weekday could not be loaded</p>
 		{/if}
-		{#if weatherData.forecast}
-			<p>
-				{weatherData.forecast.forecastday[0].day.mintemp_c}°C - {weatherData.forecast.forecastday[0]
-					.day.maxtemp_c}°C
-			</p>
-			<p>{weatherData.current.temp_c}°C</p>
-			<p>
-				{getWeekdayAbbreviation(weatherData.current.is_day + 1)}
-				<img src={weatherData.forecast.forecastday[1].day.condition.icon} alt="Weather Icon" />
-				{weatherData.forecast.forecastday[1].day.mintemp_c}°C - {weatherData.forecast.forecastday[1].day.maxtemp_c}°C
-			</p>
-		{/if}
+
 		{#if weatherData.location}
 			<p>{new Date(weatherData.location.localtime).toLocaleDateString('de-DE')}</p>
+		{:else}
+			<p>No Location found</p>
 		{/if}
+
+		{#if weatherData.current}
+			<img src={weatherData.current.condition.icon} alt="Weather Icon" />
+		{:else}
+			<p>Image for today could not be loaded</p>
+		{/if}
+
+		{#if weatherData.forecast}
+			{#if weatherData.forecast.forecastday[1]}
+				<p>
+					{weatherData.forecast.forecastday[0].day.mintemp_c}°C - {weatherData.forecast
+						.forecastday[0].day.maxtemp_c}°C
+				</p>
+			{:else}
+				<p>No data found for today.</p>
+			{/if}
+
+			<!-- not MVP
+			{#if weatherData.current.temp_c}
+				<p>{weatherData.current.temp_c}°C</p>
+			{:else}
+				<p>No temperature data found.</p>
+			{/if}
+			-->
+
+			{#if weatherData.forecast.forecastday[1]}
+				<p>
+					{getWeekdayAbbreviation(weatherData.current.is_day + 1)}
+					<img src={weatherData.forecast.forecastday[1].day.condition.icon} alt="Weather Icon" />
+					{weatherData.forecast.forecastday[1].day.mintemp_c}°C - {weatherData.forecast
+						.forecastday[1].day.maxtemp_c}°C
+				</p>
+			{:else}
+				<p>No data found for tomorrow.</p>
+			{/if}
+
+			{#if weatherData.forecast.forecastday[2]}
+				<p>
+					{getWeekdayAbbreviation(weatherData.current.is_day + 2)}
+					<img src={weatherData.forecast.forecastday[2].day.condition.icon} alt="Weather Icon" />
+					{weatherData.forecast.forecastday[2].day.mintemp_c}°C - {weatherData.forecast
+						.forecastday[2].day.maxtemp_c}°C
+				</p>
+			{:else}
+				<p>No data found for over tomorrow.</p>
+			{/if}
+
+			{#if weatherData.forecast.forecastday[3]}
+				<p>
+					{getWeekdayAbbreviation(weatherData.current.is_day + 3)}
+					<img src={weatherData.forecast.forecastday[3].day.condition.icon} alt="Weather Icon" />
+					{weatherData.forecast.forecastday[3].day.mintemp_c}°C - {weatherData.forecast
+						.forecastday[3].day.maxtemp_c}°C
+				</p>
+			{:else}
+				<p>No data found for over-over tomorrow.</p>
+			{/if}
+		{:else}
+			<p>No forecast data found.</p>
+		{/if}
+
 		{#if weatherData.error}
 			<p>{weatherData.error.message}</p>
 		{/if}
