@@ -5,17 +5,18 @@
 	export let widget: CalendarWidget;
 
 	// Initial values for the current date and time
-	var newDate = new Date();
-	var currentdate =
-		newDate.getDate() + '.' + (newDate.getMonth() + 1) + '.' + newDate.getFullYear();
-	var currenttime = newDate.getHours() + ':' + newDate.getMinutes() + ' Uhr';
+	let newDate = new Date();
+	let currentdate = String;
+	let currenttime = String;
 
 	// Function to display the current date and time
 	function displayDateTime() {
-		newDate = new Date(); // Update the date object
+		newDate = new Date();
 		currentdate = `${newDate.getDate()}.${newDate.getMonth() + 1}.${newDate.getFullYear()}`;
 		currenttime = `${newDate.getHours()}:${newDate.getMinutes()} Uhr`;
 	}
+
+	displayDateTime();
 
 	// Reload date and time every minute
 	setInterval(() => {
@@ -28,15 +29,31 @@
 
 	const getHolidays = async () => {
 		const response = await fetch('https://date.nager.at/api/v3/publicholidays/' + year + '/DE');
-		const holidays = await response.json();
+		const holidaysForThisYear = await response.json();
+		const holidays = [];
+
+		for (let i = 0; i < holidaysForThisYear.length; i++) {
+			if (
+				compareDates(currentdate, formatDate(holidaysForThisYear[i].date)) < 0 &&
+				incresment() <= 3
+			) {
+				holidays.push(holidaysForThisYear[i]);
+			}
+			if (holidays.length < 3) {
+				const response2 = await fetch(
+					'https://date.nager.at/api/v3/publicholidays/' + (year + 1) + '/DE',
+				);
+				const holidaysForNextYear = await response2.json();
+				holidaysForThisYear.push(holidaysForNextYear[i]);
+			}
+		}
 		return holidays;
 	};
 
 	// Reload API data every minute
 	setInterval(async () => {
-		const holidays = await getHolidays();
-		console.log('Updated API Response:', holidays);
-	}, 60000);
+		const holidaysForThisYear = await getHolidays();
+	}, 3600000);
 
 	// change date format to dd.mm.yyyy
 	function formatDate(inputDate) {
@@ -63,20 +80,25 @@
 		index += 1;
 		return index;
 	}
+	function isToday(ToDay: Date) {
+		if (formatDate(ToDay) == currentdate) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 </script>
 
 <h1>{currentdate + ' - ' + currenttime}</h1>
 
 {#await getHolidays()}
 	<p>Loading ...</p>
-{:then holidays}
+{:then holidaysForThisYear}
 	<div class="holidays_container">
-		{#each holidays as h}
-			{#if compareDates(currentdate, formatDate(h.date)) < 0 && incresment() <= 3}
-				<div class="dateOfHoliday"><p>{formatDate(h.date)}</p></div>
-				<div class="nameOfHoliday"><p>{h.localName}</p></div>
-				<br />
-			{/if}
+		{#each holidaysForThisYear as h}
+			<div class="dateOfHoliday"><p class:is-Today={isToday(h.date)}>{formatDate(h.date)}</p></div>
+			<div class="nameOfHoliday"><p class:is-Today={isToday(h.date)}>{h.localName}</p></div>
+			<br />
 		{/each}
 	</div>
 {/await}
@@ -99,5 +121,9 @@
 	.nameOfHoliday {
 		padding: 5%;
 		width: 50%;
+	}
+
+	.is-Today {
+		color: yellow;
 	}
 </style>
