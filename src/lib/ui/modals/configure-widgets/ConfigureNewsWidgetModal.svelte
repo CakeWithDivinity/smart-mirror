@@ -19,10 +19,7 @@
 
 <BaseModal {isOpen}>
 	<h2 slot="title">Nachrichten-Widget konfigurieren</h2>
-	<div class="content" slot="content">
-
-		Hallo
-	</div>
+	<div class="content" slot="content">Hallo</div>
 
 	<svelte:fragment slot="actions">
 		<Button style="secondary" on:click={closeModal}>Abbrechen</Button>

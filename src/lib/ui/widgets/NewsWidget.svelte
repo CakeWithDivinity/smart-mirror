@@ -8,7 +8,7 @@
 <p>Hallo</p>
 
 <style lang="scss">
-  p {
-	  color: red;
-  }
+	p {
+		color: red;
+	}
 </style>
