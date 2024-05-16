@@ -5,7 +5,7 @@
 	export let widget: WeatherWidget;
 	async function getCurrent(apiKey: string, location: string): Promise<any> {
 		return await fetch(
-			`http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${location}&days=3&aqi=no&alerts=no`,
+			`http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${location}&days=4&aqi=no&alerts=no`,
 		)
 			.then((res) => {
 				if (res.status !== 200) {
@@ -74,38 +74,40 @@
 	{#await response}
 		<p>Loading...</p>
 	{:then weatherData}
-		{#if weatherData.current}
-			<p>{getWeekday(weatherData.current.is_day)}</p>
-			<!--
+		<div>
+			{#if weatherData.current}
+				<p>{getWeekday(weatherData.current.is_day)}</p>
+				<!--
 					maybe add later on, problem: text is english
 					<p>{weatherData.current.condition.text}</p>
 				-->
-		{:else}
-			<p>Weekday could not be loaded</p>
-		{/if}
-
-		{#if weatherData.location}
-			<p>{new Date(weatherData.location.localtime).toLocaleDateString('de-DE')}</p>
-		{:else}
-			<p>No Location found</p>
-		{/if}
-
-		{#if weatherData.current}
-			<img src={weatherData.current.condition.icon} alt="Weather Icon" />
-		{:else}
-			<p>Image for today could not be loaded</p>
-		{/if}
-
-		{#if weatherData.forecast}
-			{#if weatherData.forecast.forecastday[1]}
-				<p>
-					{weatherData.forecast.forecastday[0].day.mintemp_c}°C - {weatherData.forecast
-						.forecastday[0].day.maxtemp_c}°C
-				</p>
 			{:else}
-				<p>No data found for today.</p>
+				<p>Weekday could not be loaded</p>
 			{/if}
 
+			{#if weatherData.location}
+				<p>{new Date(weatherData.location.localtime).toLocaleDateString('de-DE')}</p>
+			{:else}
+				<p>No Location found</p>
+			{/if}
+
+			{#if weatherData.current}
+				<img src={weatherData.current.condition.icon} alt="Weather Icon" />
+			{:else}
+				<p>Image for today could not be loaded</p>
+
+				{#if weatherData.forecast.forecastday[1]}
+					<p>
+						{weatherData.forecast.forecastday[0].day.mintemp_c}°C - {weatherData.forecast
+							.forecastday[0].day.maxtemp_c}°C
+					</p>
+				{:else}
+					<p>No data found for today.</p>
+				{/if}
+			{/if}
+		</div>
+
+		<div>
 			<!-- not MVP
 			{#if weatherData.current.temp_c}
 				<p>{weatherData.current.temp_c}°C</p>
@@ -113,11 +115,14 @@
 				<p>No temperature data found.</p>
 			{/if}
 			-->
-
 			{#if weatherData.forecast.forecastday[1]}
 				<p>
 					{getWeekdayAbbreviation(weatherData.current.is_day + 1)}
+				</p>
+				<p>
 					<img src={weatherData.forecast.forecastday[1].day.condition.icon} alt="Weather Icon" />
+				</p>
+				<p>
 					{weatherData.forecast.forecastday[1].day.mintemp_c}°C - {weatherData.forecast
 						.forecastday[1].day.maxtemp_c}°C
 				</p>
@@ -128,7 +133,11 @@
 			{#if weatherData.forecast.forecastday[2]}
 				<p>
 					{getWeekdayAbbreviation(weatherData.current.is_day + 2)}
+				</p>
+				<p>
 					<img src={weatherData.forecast.forecastday[2].day.condition.icon} alt="Weather Icon" />
+				</p>
+				<p>
 					{weatherData.forecast.forecastday[2].day.mintemp_c}°C - {weatherData.forecast
 						.forecastday[2].day.maxtemp_c}°C
 				</p>
@@ -139,20 +148,23 @@
 			{#if weatherData.forecast.forecastday[3]}
 				<p>
 					{getWeekdayAbbreviation(weatherData.current.is_day + 3)}
+				</p>
+				<p>
 					<img src={weatherData.forecast.forecastday[3].day.condition.icon} alt="Weather Icon" />
+				</p>
+				<p>
 					{weatherData.forecast.forecastday[3].day.mintemp_c}°C - {weatherData.forecast
 						.forecastday[3].day.maxtemp_c}°C
 				</p>
 			{:else}
 				<p>No data found for over-over tomorrow.</p>
 			{/if}
-		{:else}
-			<p>No forecast data found.</p>
-		{/if}
+		</div>
 
 		{#if weatherData.error}
 			<p>{weatherData.error.message}</p>
 		{/if}
+
 		<!--
 		error will never occure, lol
 		-->
@@ -160,3 +172,4 @@
 		<p>Error: {error.message}</p>
 	{/await}
 {/if}
+
