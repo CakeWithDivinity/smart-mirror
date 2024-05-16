@@ -1,35 +1,69 @@
-<script lang="ts">
-	import BaseModal from '../BaseModal.svelte';
-	import Button from '../../components/Button.svelte';
+<script>
+	import { writable } from 'svelte/store';
 
-	import { closeModal } from 'svelte-modals';
-	import { displayStore } from '$lib/stores/display-store';
-	import type { NewsWidget } from '$lib/data/widgets';
+	export let apiKey = writable('');
+	export let category = writable('general');
+	export let country = writable('us');
 
-	export let isOpen: boolean;
-	export let widget: NewsWidget;
-	export let position: number;
-	export let displayUuid: string;
+	const categories = [
+		'business',
+		'entertainment',
+		'general',
+		'health',
+		'science',
+		'sports',
+		'technology',
+	];
+	const countries = ['us', 'de', 'fr', 'gb', 'it', 'jp', 'ru', 'cn'];
 
-	function saveWidgetData() {
-		displayStore.updateWidget(displayUuid, position, widget);
-		closeModal();
-	}
+	const handleSave = () => {
+		localStorage.setItem('newsApiKey', $apiKey);
+		localStorage.setItem('newsCategory', $category);
+		localStorage.setItem('newsCountry', $country);
+	};
+
+	const loadSettings = () => {
+		apiKey.set(localStorage.getItem('newsApiKey') || 'c5edad3af6e04e8cb3e78cca4c73c169');
+		category.set(localStorage.getItem('newsCategory') || 'general');
+		country.set(localStorage.getItem('newsCountry') || 'us');
+	};
+
+	onMount(() => {
+		loadSettings();
+	});
 </script>
 
-<BaseModal {isOpen}>
-	<h2 slot="title">Nachrichten-Widget konfigurieren</h2>
-	<div class="content" slot="content">Hallo</div>
+<div class="config-form">
+	<label>
+		API Key:
+		<input type="text" bind:value={$apiKey} />
+	</label>
+	<label>
+		Category:
+		<select bind:value={$category}>
+			{#each categories as cat}
+				<option value={cat}>{cat}</option>
+			{/each}
+		</select>
+	</label>
+	<label>
+		Country:
+		<select bind:value={$country}>
+			{#each countries as cnt}
+				<option value={cnt}>{cnt}</option>
+			{/each}
+		</select>
+	</label>
+	<button on:click={handleSave}>Save</button>
+</div>
 
-	<svelte:fragment slot="actions">
-		<Button style="secondary" on:click={closeModal}>Abbrechen</Button>
-		<Button on:click={saveWidgetData}>Speichern</Button>
-	</svelte:fragment>
-</BaseModal>
-
-<style lang="scss">
-	.content {
+<style>
+	.config-form {
 		display: flex;
-		justify-content: center;
+		flex-direction: column;
+		gap: 1rem;
+	}
+	.config-form label {
+		font-weight: bold;
 	}
 </style>
