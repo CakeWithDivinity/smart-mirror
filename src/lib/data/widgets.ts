@@ -52,6 +52,9 @@ export interface NewsWidget extends BaseWidget {
 
 export interface WeatherWidget extends BaseWidget {
 	type: 'weather';
+	latitude: number;
+    longitude: number;
+    apiKey: string;
 }
 
 export type Widget = CalendarWidget | NewsWidget | WeatherWidget;
@@ -63,7 +66,11 @@ export function createWidget<T extends WidgetType>(widgetType: T): Widget {
 		case 'news':
 			return { type: 'news' };
 		case 'weather':
-			return { type: 'weather' };
+			return { type: 'weather',
+			latitude: 0, // default value
+			longitude: 0, // default value
+			apiKey: 'no api key entered yet' // default value
+			};
 	}
 
 	throw new Error(`Unhandled widgetType ${widgetType}`);
