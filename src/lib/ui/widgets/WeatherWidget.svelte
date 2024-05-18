@@ -1,9 +1,35 @@
 <script lang="ts">
 	import type { WeatherWidget } from '$lib/data/widgets';
+	import { onMount, onDestroy } from 'svelte';
 	import { error } from '@sveltejs/kit';
 
 	export let widget: WeatherWidget;
-	async function getCurrent(apiKey: string, location: string): Promise<any> {
+
+	export let apiKey = 'ecc75202bc194e1da32140449241205'; // Set API key
+	export let location = 'Lövenich'; // Set location // someow confirm wich Lövenich? Eingabe auf längen und Breitengerade umstellen
+	let weatherData = null;
+	let intervalId;
+	
+
+	onMount(async () => {
+		// Fetch data immediately on mount
+		weatherData = await getWeatherData(apiKey, location);
+
+		// Then set up an interval to fetch data every hour
+		intervalId = setInterval(
+			async () => {
+				weatherData = await getWeatherData(apiKey, location);
+			},
+			60 * 60 * 1000,
+		); // 60 minutes * 60 seconds * 1000 milliseconds
+	});
+
+	onDestroy(() => {
+		// Clear the interval when the component is unmounted
+		clearInterval(intervalId);
+	});
+
+	async function getWeatherData(apiKey: string, location: string): Promise<any> {
 		return await fetch(
 			`http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${location}&days=4&aqi=no&alerts=no`,
 		)
@@ -14,21 +40,16 @@
 				return res.json();
 			})
 			.catch((error) => {
-				// Handle any errors that occur during the API call
+				// Handle any errors that occure during the API call
 				console.error(error);
 				return error;
 			});
 	}
 
-	export let apiKey = 'ecc75202bc194e1da32140449241205'; // Set your API key here
-	export let location = 'Lövenich'; // Set your location here
+	console.log(weatherData);
 
-	// Call the getCurrent function with the apiKey
-	export let response = getCurrent(apiKey, location);
-	console.log(response);
-
-	function getWeekday(is_day: Number) {
-		switch (is_day) {
+	function getWeekday(day: Number) {
+		switch (day) {
 			case 0:
 				return 'Sonntag';
 			case 1:
@@ -48,8 +69,8 @@
 		}
 	}
 
-	function getWeekdayAbbreviation(is_day: Number) {
-		switch (is_day) {
+	function getWeekdayAbbreviation(day: Number) {
+		switch (day) {
 			case 0:
 				return 'So';
 			case 1:
@@ -70,8 +91,8 @@
 	}
 </script>
 
-{#if response}
-	{#await response}
+{#if weatherData}
+	{#await weatherData}
 		<p>Loading...</p>
 	{:then weatherData}
 		<div>
@@ -172,4 +193,3 @@
 		<p>Error: {error.message}</p>
 	{/await}
 {/if}
-
