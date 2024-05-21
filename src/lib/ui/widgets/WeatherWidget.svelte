@@ -9,17 +9,12 @@
 	let intervalId: number;
 
 	//export let apiKey = 'ecc75202bc194e1da32140449241205'; // Set API key
-	export let location = 'Lövenich'; // Set location // someow confirm wich Lövenich? Eingabe auf längen und Breitengerade umstellen
+	//export let location = '41812'; // Set location // someow confirm wich Lövenich? Eingabe auf längen und Breitengerade umstellen
 
 	async function getWeatherData(apiKey: string, location: string): Promise<any> {
 		const response = await fetch(
 			`http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${location}&days=4&aqi=no&alerts=no`,
 		);
-
-		if (!response.ok) {
-			console.log(response);
-			throw new Error(`HTTP error! status: ${response.status}`);
-		}
 
 		return response.json();
 	}
@@ -27,11 +22,11 @@
 	onMount(async () => {
 		try {
 			// Fetch data immediately on mount
-			weatherData = await getWeatherData(widget.apiKey, location);
+			weatherData = await getWeatherData(widget.apiKey, widget.location);
 
 			// Then set up an interval to fetch data every second
 			intervalId = setInterval(async () => {
-				weatherData = await getWeatherData(widget.apiKey, location);
+				weatherData = await getWeatherData(widget.apiKey, widget.location);
 			}, 1000); // 1 second * 1000 milliseconds
 		} catch (e) {
 			error = e;
@@ -42,8 +37,6 @@
 		// Clear the interval when the component is destroyed
 		clearInterval(intervalId);
 	});
-
-	console.log(weatherData);
 
 	function getWeekday(day: number) {
 		day = day % 7;
@@ -89,14 +82,26 @@
 		}
 	}
 </script>
-
 {#if error}
 	<p>Error: {error.message}</p>
 {:else if weatherData}
 	<div>
+		{#if weatherData.error}
+			Error occurred while fetching weather data for
+				<p>
+				location: {widget.location}
+				</p>
+				<p>
+				apiKey: {widget.apiKey}
+				</p>
+				{weatherData.error.message}
+		{/if}
+	</div>
+	<div>
 		{#if weatherData.location}
-		<p>{getWeekday(new Date(weatherData.location.localtime).getDay())}</p>
-		<p>{new Date(weatherData.location.localtime).toString()}</p>
+			<p>{weatherData.location.name}</p>
+			<p>{getWeekday(new Date(weatherData.location.localtime).getDay())}</p>
+			<!-- <p>{new Date(weatherData.location.localtime).toString()}</p> -->
 			<p>{new Date(weatherData.location.localtime).toLocaleDateString('de-DE')}</p>
 		{:else}
 			<p>No Location found</p>
@@ -106,7 +111,9 @@
 			<img src={weatherData.current.condition.icon} alt="Weather Icon" />
 		{:else}
 			<p>Image for today could not be loaded</p>
+		{/if}
 
+		{#if weatherData.forecast}
 			{#if weatherData.forecast.forecastday[1]}
 				<p>
 					{weatherData.forecast.forecastday[0].day.mintemp_c}°C - {weatherData.forecast
@@ -115,68 +122,77 @@
 			{:else}
 				<p>No data found for today.</p>
 			{/if}
+		{:else}
+			<p>No forecast data available.</p>
 		{/if}
 	</div>
 
 	<div>
-		<!-- not MVP
-			{#if weatherData.current.temp_c}
-				<p>{weatherData.current.temp_c}°C</p>
+		{#if weatherData.forecast}
+			{#if weatherData.forecast.forecastday[1]}
+				<p>
+					{getWeekdayAbbreviation(new Date(weatherData.location.localtime).getDay() + 1)}
+				</p>
+				<p>
+					<img src={weatherData.forecast.forecastday[1].day.condition.icon} alt="Weather Icon" />
+				</p>
+				<p>
+					{weatherData.forecast.forecastday[1].day.mintemp_c}°C - {weatherData.forecast
+						.forecastday[1].day.maxtemp_c}°C
+				</p>
 			{:else}
-				<p>No temperature data found.</p>
+				<p>No data found for tomorrow.</p>
 			{/if}
-			-->
-		{#if weatherData.forecast.forecastday[1]}
-			<p>
-				{getWeekdayAbbreviation((new Date(weatherData.location.localtime).getDay())+ 1)}
-			</p>
-			<p>
-				<img src={weatherData.forecast.forecastday[1].day.condition.icon} alt="Weather Icon" />
-			</p>
-			<p>
-				{weatherData.forecast.forecastday[1].day.mintemp_c}°C - {weatherData.forecast.forecastday[1]
-					.day.maxtemp_c}°C
-			</p>
 		{:else}
-			<p>No data found for tomorrow.</p>
-		{/if}
-
-		{#if weatherData.forecast.forecastday[2]}
-			<p>
-				{getWeekdayAbbreviation((new Date(weatherData.location.localtime).getDay()) + 2)}
-			</p>
-			<p>
-				<img src={weatherData.forecast.forecastday[2].day.condition.icon} alt="Weather Icon" />
-			</p>
-			<p>
-				{weatherData.forecast.forecastday[2].day.mintemp_c}°C - {weatherData.forecast.forecastday[2]
-					.day.maxtemp_c}°C
-			</p>
-		{:else}
-			<p>No data found for over tomorrow.</p>
-		{/if}
-
-		{#if weatherData.forecast.forecastday[3]}
-			<p>
-				{getWeekdayAbbreviation((new Date(weatherData.location.localtime).getDay()) + 3)}
-			</p>
-			<p>
-				<img src={weatherData.forecast.forecastday[3].day.condition.icon} alt="Weather Icon" />
-			</p>
-			<p>
-				{weatherData.forecast.forecastday[3].day.mintemp_c}°C - {weatherData.forecast.forecastday[3]
-					.day.maxtemp_c}°C
-			</p>
-		{:else}
-			<p>No data found for over-over tomorrow.</p>
+			<p>No forecast data available.</p>
 		{/if}
 	</div>
 
-	{#if weatherData.error}
-		<p>{weatherData.error.message}</p>
-	{/if}
+	<div>
+		{#if weatherData.forecast}
+			{#if weatherData.forecast.forecastday[2]}
+				<p>
+					{getWeekdayAbbreviation(new Date(weatherData.location.localtime).getDay() + 2)}
+				</p>
+				<p>
+					<img src={weatherData.forecast.forecastday[2].day.condition.icon} alt="Weather Icon" />
+				</p>
+				<p>
+					{weatherData.forecast.forecastday[2].day.mintemp_c}°C - {weatherData.forecast
+						.forecastday[2].day.maxtemp_c}°C
+				</p>
+			{:else}
+				<p>No data found for over tomorrow.</p>
+			{/if}
+		{:else}
+			<p>No forecast data available.</p>
+		{/if}
+	</div>
+
+	<div>
+		{#if weatherData.forecast}
+			{#if weatherData.forecast.forecastday[3]}
+				<p>
+					{getWeekdayAbbreviation(new Date(weatherData.location.localtime).getDay() + 3)}
+				</p>
+				<p>
+					<img src={weatherData.forecast.forecastday[3].day.condition.icon} alt="Weather Icon" />
+				</p>
+				<p>
+					{weatherData.forecast.forecastday[3].day.mintemp_c}°C - {weatherData.forecast
+						.forecastday[3].day.maxtemp_c}°C
+				</p>
+			{:else}
+				<p>No data found for over-over tomorrow.</p>
+			{/if}
+		{:else}
+			<p>No forecast data available.</p>
+		{/if}
+	</div>
 
 	<!--
 		error will never occure, lol
 		-->
+{:else}
+	<p>No weather data available.</p>
 {/if}

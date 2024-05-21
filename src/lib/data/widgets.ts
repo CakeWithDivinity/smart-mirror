@@ -52,8 +52,7 @@ export interface NewsWidget extends BaseWidget {
 
 export interface WeatherWidget extends BaseWidget {
 	type: 'weather';
-	latitude: number;
-    longitude: number;
+	location: string;
     apiKey: string;
 }
 
@@ -67,8 +66,7 @@ export function createWidget<T extends WidgetType>(widgetType: T): Widget {
 			return { type: 'news' };
 		case 'weather':
 			return { type: 'weather',
-			latitude: 0, // default value
-			longitude: 0, // default value
+			location: 'no location entered yet', // default value
 			apiKey: 'no api key entered yet' // default value
 			};
 	}

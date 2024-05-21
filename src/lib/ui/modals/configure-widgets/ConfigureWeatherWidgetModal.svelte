@@ -20,14 +20,11 @@
 <BaseModal {isOpen}>
 	<h2 slot="title">Wetter-Widget konfigurieren</h2>
 	<div class="content" slot="content">
-		<label for="latitude">Latitude:</label>
-		<input type="number" id="latitude" bind:value={widget.latitude}>
+		<label for="location">Location: </label>
+		<input type="text" id="latitude" bind:value={widget.location}>
 
-		<label for="longitude">Longitude:</label>
-		<input type="number" id="longitude" bind:value={widget.longitude}>
-
-		<label for="apiKey">API Key:</label>
-		<input type="text" id="apiKey" bind:value={widget.apiKey}>
+		<label for="apiKey">API Key: </label>
+		<input type="text" id="\napiKey" bind:value={widget.apiKey}>
 	</div>
 
 	<svelte:fragment slot="actions">
