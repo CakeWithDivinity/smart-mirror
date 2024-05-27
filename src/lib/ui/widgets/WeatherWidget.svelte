@@ -82,112 +82,117 @@
 		}
 	}
 </script>
+
 {#if error}
 	<p>Error: {error.message}</p>
 {:else if weatherData}
-	<div>
-		{#if weatherData.error}
-			Error occurred while fetching weather data for
+	<div class="weather-inner">
+		<div class="weather-inner">
+			{#if weatherData.error}
+				Error occurred while fetching weather data for
 				<p>
-				location: {widget.location}
+					location: {widget.location}
 				</p>
 				<p>
-				apiKey: {widget.apiKey}
+					apiKey: {widget.apiKey}
 				</p>
 				{weatherData.error.message}
-		{/if}
-	</div>
-	<div>
-		{#if weatherData.location}
-			<p>{weatherData.location.name}</p>
-			<p>{getWeekday(new Date(weatherData.location.localtime).getDay())}</p>
-			<!-- <p>{new Date(weatherData.location.localtime).toString()}</p> -->
-			<p>{new Date(weatherData.location.localtime).toLocaleDateString('de-DE')}</p>
-		{:else}
-			<p>No Location found</p>
-		{/if}
-
-		{#if weatherData.current}
-			<img src={weatherData.current.condition.icon} alt="Weather Icon" />
-		{:else}
-			<p>Image for today could not be loaded</p>
-		{/if}
-
-		{#if weatherData.forecast}
-			{#if weatherData.forecast.forecastday[1]}
-				<p>
-					{weatherData.forecast.forecastday[0].day.mintemp_c}°C - {weatherData.forecast
-						.forecastday[0].day.maxtemp_c}°C
-				</p>
-			{:else}
-				<p>No data found for today.</p>
 			{/if}
-		{:else}
-			<p>No forecast data available.</p>
-		{/if}
-	</div>
-
-	<div>
-		{#if weatherData.forecast}
-			{#if weatherData.forecast.forecastday[1]}
-				<p>
-					{getWeekdayAbbreviation(new Date(weatherData.location.localtime).getDay() + 1)}
-				</p>
-				<p>
-					<img src={weatherData.forecast.forecastday[1].day.condition.icon} alt="Weather Icon" />
-				</p>
-				<p>
-					{weatherData.forecast.forecastday[1].day.mintemp_c}°C - {weatherData.forecast
-						.forecastday[1].day.maxtemp_c}°C
-				</p>
+		</div>
+		<div class="weather-inner">
+			{#if weatherData.location}
+				<p>{weatherData.location.name}</p>
+				<p>{getWeekday(new Date(weatherData.location.localtime).getDay())}</p>
+				<!-- <p>{new Date(weatherData.location.localtime).toString()}</p> -->
+				<p>{new Date(weatherData.location.localtime).toLocaleDateString('de-DE')}</p>
 			{:else}
-				<p>No data found for tomorrow.</p>
+				<p>No Location found</p>
 			{/if}
-		{:else}
-			<p>No forecast data available.</p>
-		{/if}
+
+			{#if weatherData.current}
+				<img src={weatherData.current.condition.icon} alt="Weather Icon" />
+			{:else}
+				<p>Image for today could not be loaded</p>
+			{/if}
+
+			{#if weatherData.forecast}
+				{#if weatherData.forecast.forecastday[1]}
+					<p>
+						{weatherData.forecast.forecastday[0].day.mintemp_c}°C - {weatherData.forecast
+							.forecastday[0].day.maxtemp_c}°C
+					</p>
+				{:else}
+					<p>No data found for today.</p>
+				{/if}
+			{:else}
+				<p>No forecast data available.</p>
+			{/if}
+		</div>
 	</div>
 
-	<div>
-		{#if weatherData.forecast}
-			{#if weatherData.forecast.forecastday[2]}
-				<p>
-					{getWeekdayAbbreviation(new Date(weatherData.location.localtime).getDay() + 2)}
-				</p>
-				<p>
-					<img src={weatherData.forecast.forecastday[2].day.condition.icon} alt="Weather Icon" />
-				</p>
-				<p>
-					{weatherData.forecast.forecastday[2].day.mintemp_c}°C - {weatherData.forecast
-						.forecastday[2].day.maxtemp_c}°C
-				</p>
+	<div class="weather-multiple">
+		<div class="weather-inner">
+			{#if weatherData.forecast}
+				{#if weatherData.forecast.forecastday[1]}
+					<p>
+						{getWeekdayAbbreviation(new Date(weatherData.location.localtime).getDay() + 1)}
+					</p>
+					<p>
+						<img src={weatherData.forecast.forecastday[1].day.condition.icon} alt="Weather Icon" />
+					</p>
+					<p>
+						{weatherData.forecast.forecastday[1].day.mintemp_c}°C - {weatherData.forecast
+							.forecastday[1].day.maxtemp_c}°C
+					</p>
+				{:else}
+					<p>No data found for tomorrow.</p>
+				{/if}
 			{:else}
-				<p>No data found for over tomorrow.</p>
+				<p>No forecast data available.</p>
 			{/if}
-		{:else}
-			<p>No forecast data available.</p>
-		{/if}
-	</div>
+		</div>
 
-	<div>
-		{#if weatherData.forecast}
-			{#if weatherData.forecast.forecastday[3]}
-				<p>
-					{getWeekdayAbbreviation(new Date(weatherData.location.localtime).getDay() + 3)}
-				</p>
-				<p>
-					<img src={weatherData.forecast.forecastday[3].day.condition.icon} alt="Weather Icon" />
-				</p>
-				<p>
-					{weatherData.forecast.forecastday[3].day.mintemp_c}°C - {weatherData.forecast
-						.forecastday[3].day.maxtemp_c}°C
-				</p>
+		<div class="weather-inner">
+			{#if weatherData.forecast}
+				{#if weatherData.forecast.forecastday[2]}
+					<p>
+						{getWeekdayAbbreviation(new Date(weatherData.location.localtime).getDay() + 2)}
+					</p>
+					<p>
+						<img src={weatherData.forecast.forecastday[2].day.condition.icon} alt="Weather Icon" />
+					</p>
+					<p>
+						{weatherData.forecast.forecastday[2].day.mintemp_c}°C - {weatherData.forecast
+							.forecastday[2].day.maxtemp_c}°C
+					</p>
+				{:else}
+					<p>No data found for over tomorrow.</p>
+				{/if}
 			{:else}
-				<p>No data found for over-over tomorrow.</p>
+				<p>No forecast data available.</p>
 			{/if}
-		{:else}
-			<p>No forecast data available.</p>
-		{/if}
+		</div>
+
+		<div class="weather-inner">
+			{#if weatherData.forecast}
+				{#if weatherData.forecast.forecastday[3]}
+					<p>
+						{getWeekdayAbbreviation(new Date(weatherData.location.localtime).getDay() + 3)}
+					</p>
+					<p>
+						<img src={weatherData.forecast.forecastday[3].day.condition.icon} alt="Weather Icon" />
+					</p>
+					<p>
+						{weatherData.forecast.forecastday[3].day.mintemp_c}°C - {weatherData.forecast
+							.forecastday[3].day.maxtemp_c}°C
+					</p>
+				{:else}
+					<p>No data found for over-over tomorrow.</p>
+				{/if}
+			{:else}
+				<p>No forecast data available.</p>
+			{/if}
+		</div>
 	</div>
 
 	<!--
@@ -196,3 +201,16 @@
 {:else}
 	<p>No weather data available.</p>
 {/if}
+
+<style lang="scss">
+	.weather-multiple {
+		display: flex;
+		justify-content: space-between;
+	}
+	.weather-inner {
+		display: flex;
+		justify-content: center;
+		flex-direction: column; /* Add this line to make the paragraphs appear above each other */
+		align-items: center; /* Add this line to center the content vertically */
+	}
+</style>
