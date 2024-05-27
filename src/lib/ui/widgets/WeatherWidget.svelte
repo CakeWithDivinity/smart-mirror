@@ -206,10 +206,12 @@
 	.weather-multiple {
 		display: flex;
 		justify-content: space-between;
+		padding-top: 2rem;
 	}
 	.weather-inner {
 		display: flex;
 		justify-content: center;
 		flex-direction: column;
+		align-items: center;
 	}
 </style>
