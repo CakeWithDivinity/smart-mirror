@@ -8,9 +8,6 @@
 	let error: any = null;
 	let intervalId: number;
 
-	//export let apiKey = 'ecc75202bc194e1da32140449241205'; // Set API key
-	//export let location = '41812'; // Set location // someow confirm wich Lövenich? Eingabe auf längen und Breitengerade umstellen
-
 	async function getWeatherData(apiKey: string, location: string): Promise<any> {
 		const response = await fetch(
 			`http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${location}&days=4&aqi=no&alerts=no`,
@@ -103,7 +100,6 @@
 			{#if weatherData.location}
 				<p>{weatherData.location.name}</p>
 				<p>{getWeekday(new Date(weatherData.location.localtime).getDay())}</p>
-				<!-- <p>{new Date(weatherData.location.localtime).toString()}</p> -->
 				<p>{new Date(weatherData.location.localtime).toLocaleDateString('de-DE')}</p>
 			{:else}
 				<p>No Location found</p>
@@ -194,10 +190,6 @@
 			{/if}
 		</div>
 	</div>
-
-	<!--
-		error will never occure, lol
-		-->
 {:else}
 	<p>No weather data available.</p>
 {/if}
