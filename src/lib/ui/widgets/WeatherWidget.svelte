@@ -210,7 +210,6 @@
 	.weather-inner {
 		display: flex;
 		justify-content: center;
-		flex-direction: column; /* Add this line to make the paragraphs appear above each other */
-		align-items: center; /* Add this line to center the content vertically */
+		flex-direction: column;
 	}
 </style>

@@ -24,7 +24,7 @@
 		<input type="text" id="latitude" bind:value={widget.location}>
 
 		<label for="apiKey">API Key: </label>
-		<input type="text" id="\napiKey" bind:value={widget.apiKey}>
+		<input type="text" id="apiKey" bind:value={widget.apiKey}>
 	</div>
 
 	<svelte:fragment slot="actions">
