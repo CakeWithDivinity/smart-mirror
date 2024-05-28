@@ -1,10 +1,17 @@
 <script>
+	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 
+	import { apiKey, category, country } from './stores';
+	import ConfigureNewsWidget from './ConfigureNewsWidget.svelte';
+	import NewsWidget from './NewsWidget.svelte';
+
+	// Stores for the configuration values
 	export let apiKey = writable('');
 	export let category = writable('general');
 	export let country = writable('us');
 
+	// Available options for categories and countries
 	const categories = [
 		'business',
 		'entertainment',
@@ -16,18 +23,33 @@
 	];
 	const countries = ['us', 'de', 'fr', 'gb', 'it', 'jp', 'ru', 'cn'];
 
+	// Function to save the current configuration to localStorage
 	const handleSave = () => {
-		localStorage.setItem('newsApiKey', $apiKey);
-		localStorage.setItem('newsCategory', $category);
-		localStorage.setItem('newsCountry', $country);
+		apiKey.update((value) => {
+			localStorage.setItem('newsApiKey', value);
+			return value;
+		});
+		category.update((value) => {
+			localStorage.setItem('newsCategory', value);
+			return value;
+		});
+		country.update((value) => {
+			localStorage.setItem('newsCountry', value);
+			return value;
+		});
 	};
 
+	// Function to load the configuration from localStorage
 	const loadSettings = () => {
-		apiKey.set(localStorage.getItem('newsApiKey') || 'c5edad3af6e04e8cb3e78cca4c73c169');
-		category.set(localStorage.getItem('newsCategory') || 'general');
-		country.set(localStorage.getItem('newsCountry') || 'us');
+		const storedApiKey = localStorage.getItem('newsApiKey') || '';
+		const storedCategory = localStorage.getItem('newsCategory') || 'general';
+		const storedCountry = localStorage.getItem('newsCountry') || 'us';
+		apiKey.set(storedApiKey);
+		category.set(storedCategory);
+		country.set(storedCountry);
 	};
 
+	// Load settings when the component is mounted
 	onMount(() => {
 		loadSettings();
 	});

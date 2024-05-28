@@ -2,6 +2,10 @@
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 
+	import { apiKey, category, country } from './stores';
+	import ConfigureNewsWidget from './ConfigureNewsWidget.svelte';
+	import NewsWidget from './NewsWidget.svelte';
+
 	export let apiKey = '';
 	export let category = 'general';
 	export let country = 'us';
@@ -12,7 +16,7 @@
 	const fetchNews = async () => {
 		try {
 			const res = await fetch(
-				`https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=${apiKey}`,
+				`https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=${'c5edad3af6e04e8cb3e78cca4c73c169'}`,
 			);
 			const data = await res.json();
 			if (data.status === 'error') {
@@ -59,11 +63,12 @@
 	}
 	.article {
 		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
+		flex-direction: row;
+		gap: 1rem;
+		align-items: center;
 	}
 	.article img {
-		max-width: 100%;
+		max-width: 30%;
 		height: auto;
 	}
 	.article-title {
