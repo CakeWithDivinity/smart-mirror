@@ -21,7 +21,7 @@
 			// Fetch data immediately on mount
 			weatherData = await getWeatherData(widget.apiKey, widget.location);
 
-			// Then set up an interval to fetch data every second
+			// Set up an interval to fetch data every second
 			intervalId = setInterval(async () => {
 				weatherData = await getWeatherData(widget.apiKey, widget.location);
 			}, 1000); // 1 second * 1000 milliseconds
@@ -75,7 +75,7 @@
 			case 6:
 				return 'Sa';
 			default:
-				return 'Not a valid day';
+				return 'Kein gültiger Tag';
 		}
 	}
 </script>
@@ -86,9 +86,9 @@
 	<div class="weather-inner">
 		<div class="weather-inner">
 			{#if weatherData.error}
-				Error occurred while fetching weather data for
+				Ein Fehler ist beim Anfragen der Wetterdaten aufgetreten:
 				<p>
-					location: {widget.location}
+					Ort: {widget.location}
 				</p>
 				<p>
 					apiKey: {widget.apiKey}
@@ -102,96 +102,49 @@
 				<p>{getWeekday(new Date(weatherData.location.localtime).getDay())}</p>
 				<p>{new Date(weatherData.location.localtime).toLocaleDateString('de-DE')}</p>
 			{:else}
-				<p>No Location found</p>
+				<p class="error">Ort nicht gefunden</p>
 			{/if}
 
 			{#if weatherData.current}
 				<img src={weatherData.current.condition.icon} alt="Weather Icon" />
 			{:else}
-				<p>Image for today could not be loaded</p>
+				<p class="error">Bild konnte nicht geladen werden</p>
 			{/if}
 
-			{#if weatherData.forecast}
-				{#if weatherData.forecast.forecastday[1]}
-					<p>
-						{weatherData.forecast.forecastday[0].day.mintemp_c}°C - {weatherData.forecast
-							.forecastday[0].day.maxtemp_c}°C
-					</p>
-				{:else}
-					<p>No data found for today.</p>
-				{/if}
+			{#if weatherData.forecast?.forecastday?.[0]}
+				<p>
+					{weatherData.forecast.forecastday[0].day.mintemp_c}°C - {weatherData.forecast
+						.forecastday[0].day.maxtemp_c}°C
+				</p>
 			{:else}
-				<p>No forecast data available.</p>
+				<p class="error">Keine Daten für heute gefunden.</p>
 			{/if}
 		</div>
 	</div>
 
 	<div class="weather-multiple">
-		<div class="weather-inner">
-			{#if weatherData.forecast}
-				{#if weatherData.forecast.forecastday[1]}
+		{#each weatherData.forecast?.forecastday?.slice(1, 3) ?? [] as currentDay}
+			<div class="weather-inner">
+				{#if currentDay}
 					<p>
-						{getWeekdayAbbreviation(new Date(weatherData.location.localtime).getDay() + 1)}
+						{getWeekdayAbbreviation(new Date(currentDay.date).getDay())}
 					</p>
 					<p>
-						<img src={weatherData.forecast.forecastday[1].day.condition.icon} alt="Weather Icon" />
+						<img src={currentDay.day.condition.icon} alt="Weather Icon" />
 					</p>
 					<p>
-						{weatherData.forecast.forecastday[1].day.mintemp_c}°C - {weatherData.forecast
-							.forecastday[1].day.maxtemp_c}°C
-					</p>
-				{:else}
-					<p>No data found for tomorrow.</p>
-				{/if}
-			{:else}
-				<p>No forecast data available.</p>
-			{/if}
-		</div>
-
-		<div class="weather-inner">
-			{#if weatherData.forecast}
-				{#if weatherData.forecast.forecastday[2]}
-					<p>
-						{getWeekdayAbbreviation(new Date(weatherData.location.localtime).getDay() + 2)}
-					</p>
-					<p>
-						<img src={weatherData.forecast.forecastday[2].day.condition.icon} alt="Weather Icon" />
-					</p>
-					<p>
-						{weatherData.forecast.forecastday[2].day.mintemp_c}°C - {weatherData.forecast
-							.forecastday[2].day.maxtemp_c}°C
+						{currentDay.day.mintemp_c}°C - {currentDay.day.maxtemp_c}°C
 					</p>
 				{:else}
-					<p>No data found for over tomorrow.</p>
+					<p>Keine Daten für diesen Tag gefunden.</p>
 				{/if}
-			{:else}
-				<p>No forecast data available.</p>
-			{/if}
-		</div>
-
-		<div class="weather-inner">
-			{#if weatherData.forecast}
-				{#if weatherData.forecast.forecastday[3]}
-					<p>
-						{getWeekdayAbbreviation(new Date(weatherData.location.localtime).getDay() + 3)}
-					</p>
-					<p>
-						<img src={weatherData.forecast.forecastday[3].day.condition.icon} alt="Weather Icon" />
-					</p>
-					<p>
-						{weatherData.forecast.forecastday[3].day.mintemp_c}°C - {weatherData.forecast
-							.forecastday[3].day.maxtemp_c}°C
-					</p>
-				{:else}
-					<p>No data found for over-over tomorrow.</p>
-				{/if}
-			{:else}
-				<p>No forecast data available.</p>
-			{/if}
-		</div>
+			</div>
+		{:else}
+			<p class="error">Keine Wetterdaten gefunden</p>
+		{/each}
 	</div>
 {:else}
-	<p>No weather data available.</p>
+	<p class="error">No weather data available.</p>
 {/if}
 
 <style lang="scss">
@@ -205,5 +158,8 @@
 		justify-content: center;
 		flex-direction: column;
 		align-items: center;
+	}
+	.error {
+		text-align: center;
 	}
 </style>
