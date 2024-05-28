@@ -24,7 +24,7 @@
 			// Set up an interval to fetch data every second
 			intervalId = setInterval(async () => {
 				weatherData = await getWeatherData(widget.apiKey, widget.location);
-			}, 1000); // 1 second * 1000 milliseconds
+			}, 60000); // 60 second * 1000 milliseconds
 		} catch (e) {
 			error = e;
 		}
@@ -117,7 +117,7 @@
 						.forecastday[0].day.maxtemp_c}°C
 				</p>
 			{:else}
-				<p class="error">Keine Daten für heute gefunden.</p>
+				<p class="error">Keine Daten für heute verfügbar.</p>
 			{/if}
 		</div>
 	</div>
@@ -136,15 +136,15 @@
 						{currentDay.day.mintemp_c}°C - {currentDay.day.maxtemp_c}°C
 					</p>
 				{:else}
-					<p>Keine Daten für diesen Tag gefunden.</p>
+					<p>Keine Daten für diesen Tag verfügbar.</p>
 				{/if}
 			</div>
 		{:else}
-			<p class="error">Keine Wetterdaten gefunden</p>
+			<p class="error">Keine Wetterdaten verfügbar</p>
 		{/each}
 	</div>
 {:else}
-	<p class="error">No weather data available.</p>
+	<p class="error">Keine Wetterdaten verfügbar</p>
 {/if}
 
 <style lang="scss">
