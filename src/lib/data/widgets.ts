@@ -68,7 +68,7 @@ export function createWidget<T extends WidgetType>(widgetType: T): Widget {
 			return {
 				type: 'weather',
 				location: 'no location entered yet', // default value
-				apiKey: 'no api key entered yet' // default value
+				apiKey: 'no api key entered yet', // default value
 			};
 	}
 
