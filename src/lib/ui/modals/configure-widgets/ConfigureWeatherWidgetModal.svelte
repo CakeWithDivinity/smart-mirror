@@ -19,7 +19,16 @@
 
 <BaseModal {isOpen}>
 	<h2 slot="title">Wetter-Widget konfigurieren</h2>
-	<div class="content" slot="content">...</div>
+	<div class="content" slot="content">
+		<p>
+			<label for="location">Location: </label>
+			<input type="text" style="width: 42ch;" id="latitude" bind:value={widget.location} />
+		</p>
+		<p>
+			<label for="apiKey">API Key: </label>
+			<input type="text" style="width: 42ch;" id="apiKey" bind:value={widget.apiKey} />
+		</p>
+	</div>
 
 	<svelte:fragment slot="actions">
 		<Button style="secondary" on:click={closeModal}>Abbrechen</Button>
@@ -29,7 +38,9 @@
 
 <style lang="scss">
 	.content {
-		display: flex;
-		justify-content: center;
+		justify-content: space-between;
+	}
+	.content p {
+		margin: 1rem;
 	}
 </style>
