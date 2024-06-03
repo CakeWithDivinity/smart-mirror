@@ -1,10 +1,15 @@
-<script>
-	import { writable } from 'svelte/store';
+<script lang="ts">
+	import type { NewsWidget } from '$lib/data/widgets';
+	import { displayStore } from '$lib/stores/display-store';
+	import { closeModal } from 'svelte-modals';
+	import BaseModal from '../BaseModal.svelte';
 
-	export let apiKey = writable('');
-	export let category = writable('general');
-	export let country = writable('us');
+	export let widget: NewsWidget;
+	export let isOpen: boolean;
+	export let displayUuid: string;
+	export let position: number;
 
+	// Available options for categories and countries
 	const categories = [
 		'business',
 		'entertainment',
@@ -16,46 +21,40 @@
 	];
 	const countries = ['us', 'de', 'fr', 'gb', 'it', 'jp', 'ru', 'cn'];
 
-	const handleSave = () => {
-		localStorage.setItem('newsApiKey', $apiKey);
-		localStorage.setItem('newsCategory', $category);
-		localStorage.setItem('newsCountry', $country);
-	};
-
-	const loadSettings = () => {
-		apiKey.set(localStorage.getItem('newsApiKey') || 'c5edad3af6e04e8cb3e78cca4c73c169');
-		category.set(localStorage.getItem('newsCategory') || 'general');
-		country.set(localStorage.getItem('newsCountry') || 'us');
-	};
-
-	onMount(() => {
-		loadSettings();
-	});
+	function saveWidgetData() {
+		displayStore.updateWidget(displayUuid, position, widget);
+		closeModal();
+	}
 </script>
 
-<div class="config-form">
-	<label>
-		API Key:
-		<input type="text" bind:value={$apiKey} />
-	</label>
-	<label>
-		Category:
-		<select bind:value={$category}>
-			{#each categories as cat}
-				<option value={cat}>{cat}</option>
-			{/each}
-		</select>
-	</label>
-	<label>
-		Country:
-		<select bind:value={$country}>
-			{#each countries as cnt}
-				<option value={cnt}>{cnt}</option>
-			{/each}
-		</select>
-	</label>
-	<button on:click={handleSave}>Save</button>
-</div>
+<BaseModal {isOpen}>
+	<div class="config-form" slot="content">
+		<label>
+			API Key:
+			<input type="text" bind:value={widget.apiKey} />
+		</label>
+		<label>
+			Category:
+			<select bind:value={widget.category}>
+				{#each categories as cat}
+					<option value={cat}>{cat}</option>
+				{/each}
+			</select>
+		</label>
+		<label>
+			Country:
+			<select bind:value={widget.country}>
+				{#each countries as cnt}
+					<option value={cnt}>{cnt}</option>
+				{/each}
+			</select>
+		</label>
+	</div>
+	<svelte:fragment slot="actions">
+		<button on:click={closeModal}>Abbrechen</button>
+		<button on:click={saveWidgetData}>Speichern</button>
+	</svelte:fragment>
+</BaseModal>
 
 <style>
 	.config-form {

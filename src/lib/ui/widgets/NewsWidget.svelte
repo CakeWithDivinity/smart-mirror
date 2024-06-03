@@ -1,10 +1,9 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 
-	export let apiKey = '';
-	export let category = 'general';
-	export let country = 'us';
+	import type { NewsWidget } from '$lib/data/widgets';
+	export let widget: NewsWidget;
 
 	let articles = writable([]);
 	let error = writable(null);
@@ -12,7 +11,7 @@
 	const fetchNews = async () => {
 		try {
 			const res = await fetch(
-				`https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=${'c5edad3af6e04e8cb3e78cca4c73c169'}`,
+				`https://newsapi.org/v2/top-headlines?country=${widget.country}&category=${widget.category}&apiKey=${widget.apiKey}`,
 			);
 			const data = await res.json();
 			if (data.status === 'error') {
