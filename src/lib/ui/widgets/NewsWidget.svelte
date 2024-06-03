@@ -2,10 +2,6 @@
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 
-	import { apiKey, category, country } from './stores';
-	import ConfigureNewsWidget from './ConfigureNewsWidget.svelte';
-	import NewsWidget from './NewsWidget.svelte';
-
 	export let apiKey = '';
 	export let category = 'general';
 	export let country = 'us';
