@@ -5,7 +5,7 @@
 	import type { NewsWidget } from '$lib/data/widgets';
 	export let widget: NewsWidget;
 
-	let articles = writable([]);
+	let articles = writable<any[]>([]);
 	let error = writable(null);
 
 	const fetchNews = async () => {
@@ -19,7 +19,7 @@
 			}
 			articles.set(data.articles.slice(0, 3));
 			error.set(null);
-		} catch (err) {
+		} catch (err: any) {
 			error.set(err.message);
 		}
 	};

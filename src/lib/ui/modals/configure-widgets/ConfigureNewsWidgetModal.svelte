@@ -3,6 +3,7 @@
 	import { displayStore } from '$lib/stores/display-store';
 	import { closeModal } from 'svelte-modals';
 	import BaseModal from '../BaseModal.svelte';
+	import Button from '$lib/ui/components/Button.svelte';
 
 	export let widget: NewsWidget;
 	export let isOpen: boolean;
@@ -51,8 +52,8 @@
 		</label>
 	</div>
 	<svelte:fragment slot="actions">
-		<button on:click={closeModal}>Abbrechen</button>
-		<button on:click={saveWidgetData}>Speichern</button>
+		<Button style="secondary" on:click={closeModal}>Abbrechen</Button>
+		<Button on:click={saveWidgetData}>Speichern</Button>
 	</svelte:fragment>
 </BaseModal>
 
