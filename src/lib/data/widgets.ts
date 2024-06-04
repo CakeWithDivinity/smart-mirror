@@ -48,6 +48,9 @@ export interface CalendarWidget extends BaseWidget {
 
 export interface NewsWidget extends BaseWidget {
 	type: 'news';
+	apiKey: string;
+	country: string;
+	category: string;
 }
 
 export interface WeatherWidget extends BaseWidget {
@@ -63,7 +66,7 @@ export function createWidget<T extends WidgetType>(widgetType: T): Widget {
 		case 'calendar':
 			return { type: 'calendar' };
 		case 'news':
-			return { type: 'news' };
+			return { type: 'news', apiKey: '', country: '', category: '' };
 		case 'weather':
 			return {
 				type: 'weather',

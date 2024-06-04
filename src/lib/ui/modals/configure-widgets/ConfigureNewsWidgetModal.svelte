@@ -1,15 +1,26 @@
 <script lang="ts">
-	import BaseModal from '../BaseModal.svelte';
-	import Button from '../../components/Button.svelte';
-
-	import { closeModal } from 'svelte-modals';
-	import { displayStore } from '$lib/stores/display-store';
 	import type { NewsWidget } from '$lib/data/widgets';
+	import { displayStore } from '$lib/stores/display-store';
+	import { closeModal } from 'svelte-modals';
+	import BaseModal from '../BaseModal.svelte';
+	import Button from '$lib/ui/components/Button.svelte';
 
-	export let isOpen: boolean;
 	export let widget: NewsWidget;
-	export let position: number;
+	export let isOpen: boolean;
 	export let displayUuid: string;
+	export let position: number;
+
+	// Available options for categories and countries
+	const categories = [
+		'business',
+		'entertainment',
+		'general',
+		'health',
+		'science',
+		'sports',
+		'technology',
+	];
+	const countries = ['us', 'de', 'fr', 'gb', 'it', 'jp', 'ru', 'cn'];
 
 	function saveWidgetData() {
 		displayStore.updateWidget(displayUuid, position, widget);
@@ -18,18 +29,41 @@
 </script>
 
 <BaseModal {isOpen}>
-	<h2 slot="title">Nachrichten-Widget konfigurieren</h2>
-	<div class="content" slot="content">...</div>
-
+	<div class="config-form" slot="content">
+		<label>
+			API Key:
+			<input type="text" bind:value={widget.apiKey} />
+		</label>
+		<label>
+			Category:
+			<select bind:value={widget.category}>
+				{#each categories as cat}
+					<option value={cat}>{cat}</option>
+				{/each}
+			</select>
+		</label>
+		<label>
+			Country:
+			<select bind:value={widget.country}>
+				{#each countries as cnt}
+					<option value={cnt}>{cnt}</option>
+				{/each}
+			</select>
+		</label>
+	</div>
 	<svelte:fragment slot="actions">
 		<Button style="secondary" on:click={closeModal}>Abbrechen</Button>
 		<Button on:click={saveWidgetData}>Speichern</Button>
 	</svelte:fragment>
 </BaseModal>
 
-<style lang="scss">
-	.content {
+<style>
+	.config-form {
 		display: flex;
-		justify-content: center;
+		flex-direction: column;
+		gap: 1rem;
+	}
+	.config-form label {
+		font-weight: bold;
 	}
 </style>
