@@ -151,7 +151,7 @@
 	.weather-multiple {
 		display: flex;
 		justify-content: space-between;
-		padding-top: 2rem;
+		padding-top: 1rem;
 	}
 	.weather-inner {
 		display: flex;

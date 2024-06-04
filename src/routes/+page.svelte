@@ -48,8 +48,8 @@
 	.display-list {
 		display: grid;
 		max-width: 100%;
-		grid-template-columns: repeat(5, 1fr);
-		gap: 5rem;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 3rem;
 	}
 
 	.card {

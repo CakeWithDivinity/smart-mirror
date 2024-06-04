@@ -120,11 +120,10 @@
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		width: 100%;
-		gap: 3rem;
+		gap: 1rem;
 
 		> button {
 			background-color: transparent;
-			padding: 1rem;
 			border: 2px solid transparent;
 
 			&.selected {
@@ -153,7 +152,7 @@
 		align-items: center;
 		border-radius: 0.5rem;
 		box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.05);
-		width: 100%;
+		height: 5rem;
 	}
 
 	.preview {

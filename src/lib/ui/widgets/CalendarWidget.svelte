@@ -121,16 +121,20 @@
 
 	h1 {
 		text-decoration: underline;
+		font-size: 1.25rem;
 	}
+
 	.holidays_container {
 		margin-top: 5vh;
 		display: flex;
 		flex-wrap: wrap;
 	}
+
 	.dateOfHoliday,
 	.nameOfHoliday {
-		padding: 5%;
+		padding: 0.5rem;
 		width: 50%;
+		font-size: 1rem;
 	}
 
 	.is-Today {
