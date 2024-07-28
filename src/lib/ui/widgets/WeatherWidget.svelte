@@ -21,7 +21,7 @@
 			// Fetch data immediately on mount
 			weatherData = await getWeatherData(widget.apiKey, widget.location);
 
-			// Set up an interval to fetch data every second
+			// Set up an interval to fetch data
 			intervalId = setInterval(async () => {
 				weatherData = await getWeatherData(widget.apiKey, widget.location);
 			}, 60000); // 60 second * 1000 milliseconds
@@ -123,7 +123,7 @@
 	</div>
 
 	<div class="weather-multiple">
-		{#each weatherData.forecast?.forecastday?.slice(1, 3) ?? [] as currentDay}
+		{#each weatherData.forecast?.forecastday?.slice(1, 4) ?? [] as currentDay}
 			<div class="weather-inner">
 				{#if currentDay}
 					<p>
